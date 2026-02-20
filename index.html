@@ -1,0 +1,2650 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>EduSites – Jasa Pembuatan Website Profesional</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --biru: #1e5f9e;
+            --biru-dark: #134580;
+            --oranye: #f97316;
+            --oranye-dark: #e65f0b;
+            --hijau: #10b981;
+            --kuning: #f59e0b;
+            --kuning-terang: #ffd700;
+            --merah: #ef4444;
+            --pink: #f472b6;
+            --putih: #ffffff;
+            --hitam: #1e293b;
+            --abu: #f8fafc;
+            --abu-gelap: #e2e8f0;
+            --border: #cbd5e1;
+            --wa-green: #25D366;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--abu);
+            color: var(--hitam);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 clamp(1rem, 5vw, 2rem);
+        }
+
+        /* ===== CUSTOM SCROLLBAR (HANYA THUMB) ===== */
+        .custom-scrollbar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 12px;
+            height: 100vh;
+            background: transparent;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .scroll-thumb {
+            position: absolute;
+            right: 2px;
+            width: 8px;
+            height: 80px;
+            background: var(--oranye);
+            border-radius: 4px;
+            cursor: grab;
+            pointer-events: auto;
+            transition: background 0.2s, width 0.2s;
+            box-shadow: 0 0 10px rgba(249,115,22,0.5);
+            will-change: top;
+        }
+
+        .scroll-thumb:hover {
+            background: var(--oranye-dark);
+            width: 10px;
+        }
+
+        .scroll-thumb:active {
+            cursor: grabbing;
+        }
+
+        body {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .custom-scrollbar {
+                width: 8px;
+            }
+            .scroll-thumb {
+                width: 6px;
+                height: 60px;
+                right: 1px;
+            }
+        }
+
+        /* ===== LOADING SCREEN ===== */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--putih);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        .road-container {
+            width: min(80%, 600px);
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .road-line {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .road-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 20%;
+            height: 100%;
+            background: var(--oranye);
+            animation: moveStripe 2s linear infinite;
+        }
+
+        @keyframes moveStripe {
+            0% { left: -20%; }
+            100% { left: 100%; }
+        }
+
+        .vehicle {
+            font-size: clamp(2rem, 8vw, 3rem);
+            color: var(--biru);
+            position: relative;
+            width: fit-content;
+            animation: drive 3s ease-in-out infinite;
+        }
+
+        .vehicle i {
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        @keyframes drive {
+            0% { transform: translateX(-150px); }
+            25% { transform: translateX(150px); }
+            50% { transform: translateX(150px) scaleX(-1); }
+            75% { transform: translateX(-150px) scaleX(-1); }
+            100% { transform: translateX(-150px); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .loading-text {
+            margin-top: 2rem;
+            font-weight: 600;
+            color: var(--biru);
+            text-align: center;
+            font-size: clamp(1.1rem, 4vw, 1.3rem);
+        }
+
+        .loading-sub {
+            color: #6c757d;
+            margin-top: 0.5rem;
+        }
+
+        /* ===== PAGE LOADING SPINNER ===== */
+        #page-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .page-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--abu-gelap);
+            border-top-color: var(--biru);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border-bottom: 1px solid var(--border);
+            padding: 0.8rem 0;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+
+        .logo img {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 2px solid var(--oranye);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-main {
+            font-size: clamp(1.5rem, 5vw, 1.8rem);
+            font-weight: 800;
+            animation: logoGlow 2s infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { text-shadow: 0 0 5px var(--biru), 0 0 10px var(--oranye); }
+            50% { text-shadow: 0 0 15px var(--biru), 0 0 20px var(--oranye); }
+        }
+
+        .logo-main .edu { color: var(--biru); }
+        .logo-main .s1 { color: #f94144; }
+        .logo-main .s2 { color: #f3722c; }
+        .logo-main .s3 { color: #f8961e; }
+        .logo-main .s4 { color: #43aa8b; }
+        .logo-main .s5 { color: #577590; }
+
+        .motto {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6c757d;
+            margin-top: 2px;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            order: 3;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--biru);
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+            order: 2;
+        }
+
+        .nav-menu a {
+            font-weight: 600;
+            color: var(--hitam);
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--biru);
+            border-bottom-color: var(--oranye);
+        }
+
+        /* ===== MARQUEE ===== */
+        .marquee-container {
+            background: var(--hitam);
+            padding: 0.7rem 0;
+            overflow: hidden;
+            border-bottom: 2px solid var(--oranye);
+        }
+
+        .marquee-content {
+            display: flex;
+            animation: marquee 25s linear infinite;
+            white-space: nowrap;
+        }
+
+        .marquee-item {
+            font-weight: 600;
+            padding: 0 2rem;
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .marquee-item i { font-size: 1.2rem; }
+        .marquee-item:nth-child(1) { color: #f94144; }
+        .marquee-item:nth-child(2) { color: #f3722c; }
+        .marquee-item:nth-child(3) { color: #f8961e; }
+        .marquee-item:nth-child(4) { color: #43aa8b; }
+        .marquee-item:nth-child(5) { color: #577590; }
+        .marquee-item:nth-child(6) { color: #f94144; }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 2rem;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            background: var(--oranye);
+            color: white;
+            box-shadow: 0 4px 10px rgba(249,115,22,0.2);
+        }
+
+        .btn:hover {
+            background: var(--oranye-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(249,115,22,0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--oranye);
+            color: var(--oranye);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: var(--oranye);
+            color: white;
+        }
+
+        .btn-curious {
+            background: linear-gradient(135deg, var(--kuning), var(--oranye));
+            color: var(--hitam);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+            animation: glowPulse 2s infinite;
+        }
+
+        .btn-curious:hover {
+            background: linear-gradient(135deg, var(--oranye), var(--kuning));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.7);
+        }
+
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 10px var(--kuning-terang), 0 0 20px var(--oranye); }
+            50% { box-shadow: 0 0 20px var(--oranye), 0 0 40px var(--kuning-terang); }
+            100% { box-shadow: 0 0 10px var(--kuning-terang), 0 0 20px var(--oranye); }
+        }
+
+        .btn-curious .curious-link i {
+            color: var(--hitam);
+        }
+
+        .btn-curious .curious-link {
+            color: var(--hitam);
+        }
+
+        /* ===== CTA STRIP ===== */
+        .cta-strip {
+            background: linear-gradient(135deg, var(--biru), var(--hijau));
+            padding: 1.2rem 2rem;
+            margin: 2rem 0;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            box-shadow: 0 10px 25px rgba(30,95,158,0.3);
+            border: 2px solid rgba(255,255,255,0.3);
+            animation: ctaGlow 2s infinite alternate;
+        }
+
+        @keyframes ctaGlow {
+            from { box-shadow: 0 10px 25px rgba(30,95,158,0.3); }
+            to { box-shadow: 0 15px 35px rgba(249,115,22,0.4); }
+        }
+
+        .cta-strip-text {
+            color: white;
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cta-strip-text i {
+            font-size: 1.8rem;
+            color: var(--kuning-terang);
+            animation: bounce 1s infinite;
+        }
+
+        .cta-strip-btn {
+            background: white;
+            color: var(--hitam);
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 2px solid var(--kuning-terang);
+            animation: btnPulse 2s infinite;
+        }
+
+        .cta-strip-btn:hover {
+            background: var(--kuning-terang);
+            color: var(--hitam);
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        /* ===== BADGE HARGA ===== */
+        .price-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--oranye), var(--kuning));
+            color: var(--hitam);
+            padding: 0.5rem 2.5rem;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 15px rgba(249,115,22,0.4);
+            animation: priceGlow 2s infinite;
+            border: 2px solid white;
+        }
+
+        @keyframes priceGlow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* ===== MODAL PENASARAN ===== */
+        .curious-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .curious-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--putih);
+            border-radius: 30px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+            animation: modalPop 0.5s ease-out;
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--hitam);
+            transition: 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--oranye);
+        }
+
+        .modal-slider {
+            position: relative;
+            min-height: 400px;
+        }
+
+        .modal-slide {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .modal-slide.active {
+            display: block;
+            animation: slideFade 0.5s;
+        }
+
+        @keyframes slideFade {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-slide h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--biru);
+        }
+
+        .modal-slide p {
+            font-size: 1.2rem;
+            margin: 1rem 0;
+            color: var(--hitam);
+        }
+
+        .modal-slide .price-tag {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--oranye);
+            margin: 1rem 0;
+        }
+
+        .modal-slide .benefit-list {
+            text-align: left;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .modal-slide .benefit-list li {
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-slide .benefit-list i {
+            color: var(--hijau);
+        }
+
+        .modal-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .modal-nav button {
+            background: var(--biru);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .modal-nav button:hover {
+            background: var(--biru-dark);
+            transform: scale(1.05);
+        }
+
+        .modal-nav button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .curious-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+        }
+
+        .curious-link i {
+            font-size: 1.8rem;
+            animation: peek 1.5s ease-in-out infinite;
+        }
+
+        @keyframes peek {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* ===== PAGES ===== */
+        .page {
+            display: none;
+            min-height: calc(100vh - 160px);
+            padding: clamp(2rem, 5vw, 4rem) 0;
+        }
+
+        .page.active { display: block; }
+
+        /* ===== HOME ===== */
+        .hero {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto 3rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: 800;
+            line-height: 1.2;
+            color: var(--hitam);
+        }
+
+        .hero-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+            margin: 1rem 0 2rem;
+        }
+
+        .hero-tags span {
+            background: var(--putih);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .hero-tags i { color: var(--oranye); }
+
+        .hero p {
+            color: #4b5563;
+            max-width: 700px;
+            margin: 0 auto 1rem;
+        }
+
+        .hero .cta-bold {
+            font-weight: 700;
+            color: var(--biru);
+            font-size: 1.3rem;
+            margin-top: 1rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        /* ===== KEUNGGULAN SECTION ===== */
+        .keunggulan-section {
+            background: var(--putih);
+            border-radius: 30px;
+            padding: clamp(2rem, 5vw, 3rem);
+            margin: 3rem 0;
+            border: 1px solid var(--border);
+        }
+
+        .keunggulan-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .keunggulan-card {
+            background: var(--abu);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: 0.3s;
+            border: 1px solid var(--border);
+        }
+
+        .keunggulan-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--biru);
+            box-shadow: 0 15px 30px rgba(30,95,158,0.1);
+        }
+
+        .keunggulan-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--biru);
+        }
+
+        .keunggulan-card h3 {
+            color: var(--biru);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .keunggulan-card p {
+            color: #4b5563;
+            font-size: 0.95rem;
+        }
+
+        .keunggulan-card ul {
+            list-style: none;
+            text-align: left;
+            margin-top: 0.8rem;
+        }
+
+        .keunggulan-card ul li {
+            margin: 0.4rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--hitam);
+            font-size: 0.9rem;
+        }
+
+        .keunggulan-card ul li i {
+            color: var(--hijau);
+        }
+
+        /* ===== TENTANG SECTION ===== */
+        .about-section {
+            background: var(--putih);
+            border-radius: 30px;
+            padding: 3rem;
+            margin: 3rem 0;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .about-section h2 {
+            color: var(--biru);
+            margin-bottom: 1rem;
+        }
+
+        /* ===== Q&A ===== */
+        .qa-section {
+            background: var(--putih);
+            border-radius: 30px;
+            padding: 3rem;
+            margin: 4rem 0;
+            border: 1px solid var(--border);
+        }
+
+        .qa-grid {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .qa-item {
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1rem;
+        }
+
+        .qa-question {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem 0;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--biru);
+        }
+
+        .qa-question i {
+            transition: transform 0.3s;
+            color: var(--oranye);
+        }
+
+        .qa-item.active .qa-question i { transform: rotate(180deg); }
+
+        .qa-answer {
+            display: none;
+            padding: 0 0 1.5rem 2.5rem;
+            color: var(--hitam);
+            line-height: 1.7;
+        }
+
+        .qa-item.active .qa-answer { display: block; }
+
+        /* ===== SECTION TITLE ===== */
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: var(--hitam);
+        }
+
+        .section-title span { color: var(--biru); }
+
+        /* ===== KATEGORI LAYANAN ===== */
+        .kategori-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .kategori-card {
+            background: var(--putih);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: 0.3s;
+            border: 2px solid var(--border);
+        }
+
+        .kategori-card:hover {
+            border-color: var(--biru);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(30,95,158,0.1);
+        }
+
+        .kategori-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--biru);
+        }
+
+        .kategori-card h3 {
+            color: var(--biru);
+            margin-bottom: 1rem;
+        }
+
+        .kategori-benefits {
+            list-style: none;
+            text-align: left;
+            margin-top: 1rem;
+        }
+
+        .kategori-benefits li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--hitam);
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .kategori-benefits li i {
+            color: var(--hijau);
+        }
+
+        .kategori-harga {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--oranye);
+            margin: 1rem 0;
+        }
+
+        /* ===== PAKET HARGA JASA ===== */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .pricing-card {
+            background: var(--putih);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: 0.3s;
+            text-align: left;
+        }
+
+        .pricing-card:hover {
+            border-color: var(--biru);
+            box-shadow: 0 15px 30px rgba(30,95,158,0.1);
+            transform: translateY(-5px);
+        }
+
+        .pricing-card h3 {
+            color: var(--biru);
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-sub {
+            color: #6b7280;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .pricing-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--hitam);
+            margin: 1rem 0;
+        }
+
+        .pricing-price small {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #6b7280;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .pricing-features li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--hitam);
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .pricing-features li i {
+            color: var(--oranye);
+        }
+
+        .pricing-card .btn { width: 100%; }
+
+        .popular-badge {
+            background: var(--oranye);
+            color: white;
+            padding: 0.2rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        /* ===== PAKET SOURCE CODE ===== */
+        .source-code-section {
+            background: linear-gradient(135deg, var(--biru), var(--hijau));
+            border-radius: 30px;
+            padding: 3rem;
+            margin: 3rem 0;
+            color: white;
+        }
+
+        .source-code-section h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .source-code-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .source-code-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .source-code-card h4 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--kuning-terang);
+        }
+
+        .source-code-card p {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .source-code-card ul {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .source-code-card ul li {
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .source-code-card ul li i {
+            color: var(--kuning-terang);
+        }
+
+        .source-code-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--kuning-terang);
+            margin: 1rem 0;
+        }
+
+        .source-code-price small {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        /* ===== PORTOFOLIO (VERSI KEKINIAN) ===== */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .portfolio-item {
+            background: var(--putih);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(30,95,158,0.2);
+            border-color: var(--biru);
+        }
+
+        .portfolio-media {
+            height: 180px;
+            background: linear-gradient(135deg, var(--biru), var(--hijau));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portfolio-media i {
+            font-size: 4rem;
+            color: rgba(255,255,255,0.5);
+            transition: 0.3s;
+        }
+
+        .portfolio-item:hover .portfolio-media i {
+            transform: scale(1.1);
+            color: white;
+        }
+
+        .portfolio-media::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .portfolio-item:hover .portfolio-media::after {
+            opacity: 1;
+        }
+
+        .portfolio-content {
+            padding: 1.5rem;
+            flex: 1;
+        }
+
+        .portfolio-item h3 {
+            color: var(--biru);
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .portfolio-desc {
+            color: #4b5563;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .portfolio-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--oranye);
+            font-weight: 600;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            background: rgba(249,115,22,0.1);
+            border-radius: 30px;
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .portfolio-link:hover {
+            background: var(--oranye);
+            color: white;
+            transform: translateX(5px);
+            border-color: var(--oranye);
+        }
+
+        .portfolio-link i {
+            transition: 0.3s;
+        }
+
+        .portfolio-link:hover i {
+            transform: translateX(5px);
+        }
+
+        /* Animasi Buku dan Tangan (tetap) */
+        .book-walk {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            font-size: 3rem;
+            color: var(--biru);
+        }
+
+        .book-walk i {
+            animation: walk 3s ease-in-out infinite;
+        }
+
+        @keyframes walk {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(50px); }
+            50% { transform: translateX(0); }
+            75% { transform: translateX(-50px); }
+            100% { transform: translateX(0); }
+        }
+
+        .handshake-animation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            font-size: 3rem;
+            color: var(--biru);
+        }
+
+        .left-hand { animation: moveLeft 3s ease-in-out infinite; }
+        .right-hand { animation: moveRight 3s ease-in-out infinite; }
+
+        @keyframes moveLeft {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(30px) rotate(-15deg); }
+            75% { transform: translateX(0); }
+        }
+
+        @keyframes moveRight {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-30px) rotate(15deg); }
+            75% { transform: translateX(0); }
+        }
+
+        .peeking-face {
+            position: relative;
+            height: 100px;
+            overflow: hidden;
+            margin: 2rem 0;
+            border-bottom: 3px solid var(--oranye);
+        }
+
+        .peeking-face i {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            animation: peekUp 2s ease-in-out infinite;
+            color: var(--biru);
+        }
+
+        @keyframes peekUp {
+            0%, 100% { transform: translate(-50%, 100%); }
+            50% { transform: translate(-50%, 0); }
+        }
+
+        /* ===== PROMO AJAK TEMAN ===== */
+        .promo-teman-section {
+            background: linear-gradient(135deg, var(--biru), var(--hijau));
+            color: white;
+            border-radius: 30px;
+            padding: 3rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .promo-teman-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .promo-highlight {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--kuning-terang);
+            margin: 1rem 0;
+        }
+
+        .promo-detail {
+            font-size: 1.3rem;
+            margin: 2rem 0;
+        }
+
+        .promo-points {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .promo-point {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            flex: 1 1 200px;
+        }
+
+        .promo-point i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--kuning-terang);
+        }
+
+        .promo-point h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .share-text-box {
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 600px;
+        }
+
+        .share-text-content {
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: left;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            line-height: 1.8;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .btn-copy {
+            background: white;
+            color: var(--biru);
+            font-size: 1.2rem;
+            padding: 0.8rem 2rem;
+        }
+
+        .btn-copy:hover {
+            background: var(--kuning-terang);
+            color: var(--hitam);
+        }
+
+        /* ===== KONTAK ===== */
+        .contact-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+
+        .contact-card {
+            background: var(--putih);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            flex: 1 1 250px;
+            border: 1px solid var(--border);
+        }
+
+        .contact-card:hover { border-color: var(--biru); }
+
+        .contact-icon {
+            font-size: 3rem;
+            color: var(--biru);
+            margin-bottom: 1rem;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 3rem auto 0;
+            background: var(--putih);
+            padding: 2.5rem;
+            border-radius: 25px;
+            border: 1px solid var(--border);
+        }
+
+        .form-group { margin-bottom: 1.2rem; }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--biru);
+        }
+
+        /* ===== METODE PEMBAYARAN ===== */
+        .payment-methods {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .payment-method {
+            background: var(--putih);
+            border-radius: 15px;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid var(--border);
+            font-weight: 600;
+        }
+
+        .payment-method i {
+            font-size: 1.5rem;
+            color: var(--biru);
+        }
+
+        /* ===== HALAMAN RESELLER ===== */
+        .reseller-section {
+            background: var(--putih);
+            border-radius: 30px;
+            padding: 3rem;
+            margin: 2rem 0;
+            border: 1px solid var(--border);
+        }
+
+        .reseller-benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .reseller-benefit-card {
+            background: var(--abu);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .reseller-benefit-card i {
+            font-size: 2.5rem;
+            color: var(--biru);
+            margin-bottom: 1rem;
+        }
+
+        .reseller-benefit-card h3 {
+            color: var(--biru);
+            margin-bottom: 0.5rem;
+        }
+
+        .reseller-benefit-card p {
+            color: #4b5563;
+            font-size: 0.95rem;
+        }
+
+        .reseller-note {
+            background: linear-gradient(135deg, var(--biru), var(--hijau));
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .reseller-note p {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .reseller-note ul {
+            margin-left: 1.5rem;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .reseller-form {
+            max-width: 600px;
+            margin: 2rem auto;
+            background: var(--abu);
+            padding: 2rem;
+            border-radius: 20px;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--hitam);
+            color: white;
+            padding: 4rem 0 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            border: 2px solid var(--oranye);
+        }
+
+        .footer-logo .edu {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--biru);
+        }
+
+        .footer-logo .s1 { color: #f94144; }
+        .footer-logo .s2 { color: #f3722c; }
+        .footer-logo .s3 { color: #f8961e; }
+        .footer-logo .s4 { color: #43aa8b; }
+        .footer-logo .s5 { color: #577590; }
+
+        .footer-links {
+            display: flex;
+            gap: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links h4 {
+            margin-bottom: 1rem;
+            color: #adb5bd;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li { margin: 0.6rem 0; }
+        .footer-links a {
+            color: #adb5bd;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover { color: white; }
+
+        .footer-wa {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        .footer-wa a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--wa-green);
+            color: white;
+            font-size: 1.8rem;
+            transition: transform 0.2s;
+        }
+        .footer-wa a:hover {
+            transform: scale(1.1);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .footer-social a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+        }
+
+        .footer-social a:hover {
+            background: var(--oranye);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            border-top: 1px solid #495057;
+            padding-top: 2rem;
+            color: #adb5bd;
+        }
+
+        .payment-info {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 1.8rem;
+            margin: 2rem 0;
+            border-left: 5px solid var(--oranye);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .payment-info-text {
+            flex: 2;
+            min-width: 250px;
+        }
+
+        .payment-info-text h4 {
+            color: white;
+            margin-bottom: 0.8rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .payment-info-text p {
+            color: #adb5bd;
+            line-height: 1.7;
+            margin-bottom: 0.5rem;
+        }
+
+        .payment-info-icons {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .payment-info-icons i {
+            font-size: 2.5rem;
+            color: var(--oranye);
+            transition: transform 0.2s;
+        }
+
+        .payment-info-icons i:hover {
+            transform: scale(1.2);
+            color: var(--kuning-terang);
+        }
+
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16, 185, 129, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            margin-top: 0.8rem;
+            border: 1px solid var(--hijau);
+        }
+
+        .security-badge i {
+            color: var(--hijau);
+            font-size: 1.2rem;
+        }
+
+        .security-badge span {
+            color: white;
+            font-weight: 500;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .navbar { flex-wrap: wrap; }
+            .hamburger { display: flex; }
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background: rgba(255,255,255,0.95);
+                padding: 1rem;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                margin-top: 1rem;
+                order: 4;
+            }
+            .nav-menu.active { display: flex; }
+            .nav-menu li { width: 100%; text-align: center; }
+            .nav-menu a { display: block; padding: 0.8rem; }
+
+            .hero-tags { gap: 0.5rem; }
+            .hero-tags span { font-size: 0.8rem; }
+
+            .footer-content { flex-direction: column; gap: 2rem; }
+            .footer-links { gap: 2rem; }
+
+            .modal-content {
+                padding: 1.5rem;
+                width: 95%;
+            }
+
+            .modal-slide h2 {
+                font-size: 1.5rem;
+            }
+
+            .payment-info {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .pricing-grid,
+            .portfolio-grid,
+            .kategori-grid,
+            .keunggulan-grid,
+            .reseller-benefits,
+            .source-code-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-buttons { flex-direction: column; align-items: center; }
+            .btn { width: 100%; }
+        }
+
+        /* ===== TAMBAHAN UI/UX PROFESIONAL ===== */
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Reveal on scroll */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Efek glassmorphism pada header dan card */
+        header {
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .keunggulan-card, .kategori-card, .pricing-card, .portfolio-item, .contact-card, .reseller-benefit-card {
+            backdrop-filter: blur(2px);
+            background: rgba(255,255,255,0.9);
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s, backdrop-filter 0.3s;
+        }
+        .keunggulan-card:hover, .kategori-card:hover, .pricing-card:hover, .portfolio-item:hover, .contact-card:hover, .reseller-benefit-card:hover {
+            backdrop-filter: blur(4px);
+            background: rgba(255,255,255,0.95);
+        }
+
+        /* Efek parallax pada marquee (opsional) */
+        .marquee-container {
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        /* Partikel latar belakang (elemen dekoratif) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: radial-gradient(circle at 10% 20%, rgba(30,95,158,0.03) 0%, transparent 30%),
+                        radial-gradient(circle at 90% 70%, rgba(249,115,22,0.03) 0%, transparent 30%);
+            z-index: -1;
+        }
+
+        /* Micro-interactions tambahan */
+        .nav-menu a {
+            position: relative;
+        }
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--oranye);
+            transition: width 0.3s ease;
+        }
+        .nav-menu a:hover::after,
+        .nav-menu a.active::after {
+            width: 100%;
+        }
+
+        .btn, .cta-strip-btn, .portfolio-link {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn::after, .cta-strip-btn::after, .portfolio-link::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+        .btn:active::after, .cta-strip-btn:active::after, .portfolio-link:active::after {
+            width: 200px;
+            height: 200px;
+        }
+
+        /* Animasi untuk scroll reveal */
+        .hero, .keunggulan-section, .about-section, .qa-section, .kategori-grid, .pricing-grid, .source-code-section, .portfolio-grid, .promo-teman-section, .contact-grid, .reseller-section {
+            will-change: transform, opacity;
+        }
+
+        /* Peningkatan responsivitas */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- CUSTOM SCROLLBAR (HANYA THUMB) -->
+    <div class="custom-scrollbar" id="customScrollbar">
+        <div class="scroll-thumb" id="scrollThumb"></div>
+    </div>
+
+    <!-- LOADING SCREEN -->
+    <div id="loading-screen">
+        <div class="road-container">
+            <div class="vehicle">
+                <i class="fas fa-motorcycle"></i>
+            </div>
+            <div class="road-line"></div>
+        </div>
+        <div class="loading-text">Menyiapkan website impian Anda...</div>
+        <div class="loading-sub">Sebentar lagi Anda akan melihat aset digital terbaik</div>
+    </div>
+
+    <!-- PAGE LOADING SPINNER -->
+    <div id="page-loading">
+        <div class="page-spinner"></div>
+    </div>
+
+    <!-- MODAL PENASARAN -->
+    <div class="curious-modal" id="curiousModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeCuriousModal()">&times;</span>
+            <div class="modal-slider">
+                <div class="modal-slide active" id="slide1">
+                    <h2>Anda Penasaran? Bagus Sekali.</h2>
+                    <p>Rasa penasaran merupakan awal dari keputusan yang tepat. Mari kami perkenalkan apa yang membuat EduSites berbeda.</p>
+                    <div class="price-tag">Rp5.000</div>
+                    <p>Ya, Anda tidak salah membaca. Hanya Rp5.000 untuk mendapatkan website profesional.</p>
+                </div>
+                <div class="modal-slide" id="slide2">
+                    <h2>Bayangkan Potensi Ini</h2>
+                    <p>Dalam waktu 2-3 hari, Anda akan memiliki website profesional yang dapat:</p>
+                    <ul class="benefit-list">
+                        <li><i class="fas fa-check"></i> Menarik minat pelanggan baru</li>
+                        <li><i class="fas fa-check"></i> Memfasilitasi proses pembelajaran</li>
+                        <li><i class="fas fa-check"></i> Meningkatkan kredibilitas usaha</li>
+                        <li><i class="fas fa-check"></i> Dapat diakses 24/7 dari mana saja</li>
+                    </ul>
+                </div>
+                <div class="modal-slide" id="slide3">
+                    <h2>Tanpa Risiko</h2>
+                    <p>Sistem pembayaran dilakukan setelah website selesai dan Anda menyetujui hasilnya. Revisi kami lakukan hingga Anda puas.</p>
+                    <p class="price-tag">100% AMAN</p>
+                </div>
+                <div class="modal-slide" id="slide4">
+                    <h2>Penawaran Spesial</h2>
+                    <p>Untuk 50 pendaftar pertama, kami berikan konsultasi gratis dan revisi tambahan tanpa biaya.</p>
+                    <p class="price-tag">CUKUP RP100 UNTUK PEMBUATAN PERTAMA</p>
+                </div>
+                <div class="modal-slide" id="slide5">
+                    <h2>Saatnya Bertindak</h2>
+                    <p>Jangan biarkan kompetitor Anda melangkah lebih jauh. Aset digital ini akan memberikan manfaat dalam jangka panjang.</p>
+                    <a href="#" onclick="showPage('kontak'); closeCuriousModal(); return false;" class="btn" style="margin-top: 1rem; font-size: 1.3rem; padding: 1rem 3rem;">
+                        <i class="fab fa-whatsapp"></i> Konsultasi Sekarang
+                    </a>
+                </div>
+            </div>
+            <div class="modal-nav">
+                <button id="prevSlide" disabled>Sebelumnya</button>
+                <button id="nextSlide">Selanjutnya</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo" onclick="showPage('home')">
+                    <img src="Edu.jpg" alt="EduSites">
+                    <div class="logo-text">
+                        <span class="logo-main">
+                            <span class="edu">Edu</span><span class="s1">s</span><span class="s2">i</span><span class="s3">t</span><span class="s4">e</span><span class="s5">s</span>
+                        </span>
+                        <span class="motto">Solusi Digital Terpercaya</span>
+                    </div>
+                </div>
+
+                <button class="hamburger" id="hamburger">
+                    <span></span><span></span><span></span>
+                </button>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#" onclick="showPage('home'); return false;" class="nav-link active" id="nav-home">BERANDA</a></li>
+                    <li><a href="#" onclick="showPage('tentang'); return false;" class="nav-link" id="nav-tentang">TENTANG</a></li>
+                    <li><a href="#" onclick="showPage('layanan'); return false;" class="nav-link" id="nav-layanan">LAYANAN</a></li>
+                    <li><a href="#" onclick="showPage('klien'); return false;" class="nav-link" id="nav-klien">KARYA</a></li>
+                    <li><a href="#" onclick="showPage('blog'); return false;" class="nav-link" id="nav-blog">BLOG</a></li>
+                    <li><a href="#" onclick="showPage('kontak'); return false;" class="nav-link" id="nav-kontak">KONTAK</a></li>
+                    <li><a href="#" onclick="showPage('gratis'); return false;" class="nav-link" id="nav-gratis">PROMO</a></li>
+                    <li><a href="#" onclick="showPage('reseller'); return false;" class="nav-link" id="nav-reseller">RESELLER</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HALAMAN BERANDA -->
+    <div class="page active" id="home">
+        <div class="container">
+            <div class="hero">
+                <h1>Jasa Pembuatan Website <span class="text-pink">Profesional</span> & <span class="text-green">Terjangkau</span></h1>
+                <div class="price-badge">Mulai Rp5.000 (Sekali Bayar)</div>
+                <div class="hero-tags">
+                    <span><i class="fas fa-briefcase"></i> Bisnis/UMKM</span>
+                    <span><i class="fas fa-graduation-cap"></i> Belajar Interaktif</span>
+                    <span><i class="fas fa-comments"></i> Dialog & Presentasi Teks</span>
+                    <span><i class="fas fa-shopping-cart"></i> Toko Online</span>
+                    <span><i class="fas fa-calendar-alt"></i> Event</span>
+                    <span><i class="fas fa-trophy"></i> Turnamen</span>
+                </div>
+                <p class="cta-bold">
+                    Proses 2-3 hari • Akses seumur hidup • Hosting gratis
+                </p>
+                <p>
+                    Investasi Rp5.000 untuk aset digital jangka panjang. Website interaktif, responsif, dan tanpa biaya bulanan.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#" onclick="showPage('layanan'); return false;" class="btn">Lihat Paket</a>
+                    <button onclick="openCuriousModal()" class="btn btn-curious">
+                        <span class="curious-link">
+                            <i class="fas fa-smile-wink"></i> Ingin Tahu Lebih Lanjut?
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- CTA STRIP BERANDA -->
+            <div class="cta-strip">
+                <div class="cta-strip-text">
+                    <i class="fas fa-rocket"></i> Waktunya Memiliki Aset Digital
+                </div>
+                <a href="#" onclick="showPage('kontak'); return false;" class="cta-strip-btn">Pesan Sekarang</a>
+            </div>
+
+            <!-- AJAKAN KE RESELLER -->
+            <div class="cta-strip" style="background: linear-gradient(135deg, var(--oranye), var(--pink)); margin-top: 1rem;">
+                <div class="cta-strip-text">
+                    <i class="fas fa-handshake"></i> Kami Juga Membuka Peluang Reseller/Dropship
+                </div>
+                <a href="#" onclick="showPage('reseller'); return false;" class="cta-strip-btn">Informasi Selengkapnya</a>
+            </div>
+
+            <!-- KEUNGGULAN (10 POIN) -->
+            <div class="keunggulan-section">
+                <h2 class="section-title"><span>Keunggulan</span> EduSites</h2>
+                <div class="keunggulan-grid">
+                    <div class="keunggulan-card">
+                        <div class="keunggulan-icon">⚡</div>
+                        <h3>Super Cepat</h3>
+                        <p>Website selesai dalam 2-3 hari. Cocok untuk kebutuhan mendesak, tugas, atau peluncuran produk.</p>
+                    </div>
+                    <div class="keunggulan-card">
+                        <div class="keunggulan-icon">💰</div>
+                        <h3>Harga Terjangkau</h3>
+                        <p>Mulai Rp5.000 sekali bayar. Bandingkan dengan jasa lain yang mulai Rp500.000. Hemat hingga 90%.</p>
+                    </div>
+                    <div class="keunggulan-card">
+                        <div class="keunggulan-icon">♾️</div>
+                        <h3>Akses Seumur Hidup</h3>
+                        <p>Bayar sekali, website online selamanya. Tanpa biaya bulanan atau perpanjangan.</p>
+                    </div>
+                    <div class="keunggulan-card">
+                        <div class="keunggulan-icon">🛡️</div>
+                        <h3>Garansi 100% Puas</h3>
+                        <p>Bayar setelah website jadi dan Anda setuju. Revisi hingga cocok, tanpa risiko.</p>
+                    </div>
+                    <div class="keunggulan-card">
+                        <div class="keunggulan-icon">📱</div>
+                        <h3>Responsif & Modern</h3>
+                        <p>Tampilan sempurna di HP, tablet, laptop. Desain interaktif dan ramah pengguna.</p>
+                    </div>
+                    <div class="keunggulan-card">
+                        <div class="keunggulan-icon">🚀</div>
+                        <h3>Hosting Gratis Premium</h3>
+                        <p>Menggunakan Vercel/Netlify – cepat, CDN global, SSL gratis. Website ngebut dan aman.</p>
+                    </div>
+                    <div class="keunggulan-card">
+                        <div class="keunggulan-icon"><i class="fas fa-shield-virus"></i></div>
+                        <h3>Aman dari Hacker</h3>
+                        <p>Website Anda dilindungi dengan sistem keamanan enterprise:</p>
+                        <ul>
+                            <li><i class="fas fa-lock"></i> SSL Gratis (HTTPS) – data terenkripsi</li>
+                            <li><i class="fas fa-shield-alt"></i> Proteksi DDoS otomatis</li>
+                            <li><i class="fas fa-globe"></i> Infrastruktur cloud aman</li>
+                            <li><i class="fas fa-sync"></i> Update keamanan rutin</li>
+                        </ul>
+                    </div>
+                    <div class="keunggulan-card">
+                        <div class="keunggulan-icon"><i class="fas fa-paint-brush"></i></div>
+                        <h3>Desain Kustom</h3>
+                        <p>Setiap website dirancang sesuai branding dan kebutuhan Anda. Tidak ada template pasaran. Desain unik dan profesional.</p>
+                    </div>
+                    <div class="keunggulan-card">
+                        <div class="keunggulan-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        <h3>Kecepatan Optimal</h3>
+                        <p>Dengan CDN global dan optimasi kode, website Anda loading super cepat di semua perangkat dan lokasi.</p>
+                    </div>
+                    <div class="keunggulan-card">
+                        <div class="keunggulan-icon"><i class="fas fa-headset"></i></div>
+                        <h3>Support 24/7</h3>
+                        <p>Tim support siap membantu via WhatsApp. Respon cepat maksimal 1 jam. Bantuan teknis gratis selamanya.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TENTANG SINGKAT -->
+            <div class="about-section">
+                <h2>Tentang EduSites</h2>
+                <p>Kami adalah tim profesional yang berfokus pada pembuatan website berkualitas dengan harga paling ramah di kantong. Setiap website dirancang interaktif, responsif, dan tanpa biaya tersembunyi. Dari pelajar hingga UMKM, semua dapat memiliki aset digital unggulan. <span class="text-pink">Kami tidak menerima proyek website pribadi (portofolio), presentasi, atau judi online. Untuk presentasi, kami hanya menerima presentasi berbasis teks (dialog, naskah).</span></p>
+            </div>
+
+            <!-- Q&A (8 PERTANYAAN) -->
+            <div class="qa-section">
+                <h2 class="section-title">Pertanyaan yang Sering Diajukan</h2>
+                <div class="qa-grid">
+                    <div class="qa-item">
+                        <div class="qa-question"><i class="fas fa-chevron-down"></i> Mengapa harga EduSites dapat semurah ini?</div>
+                        <div class="qa-answer"><p>Kami memanfaatkan layanan hosting gratis berkualitas tinggi seperti Vercel, Netlify, dan GitHub Pages. Biaya hosting biasanya menjadi komponen termahal dalam pembuatan website (dapat mencapai Rp100.000–Rp500.000 per tahun). Dengan platform ini, kami dapat menghadirkan website cepat dengan CDN global tanpa biaya. Kami hanya membebankan biaya untuk jasa pembuatan website, bukan penjualan hosting.</p></div>
+                    </div>
+                    <div class="qa-item">
+                        <div class="qa-question"><i class="fas fa-chevron-down"></i> Apa perbedaan hosting Vercel/Netlify dengan hosting biasa (.com/.id)?</div>
+                        <div class="qa-answer"><p><strong>Hosting biasa (.com/.id)</strong>: Anda membayar bulanan atau tahunan, perlu mengelola server sendiri, dan kecepatan bergantung pada server yang dipilih.<br> <strong>Vercel/Netlify (yang kami gunakan)</strong>: <span class="text-green">Gratis selamanya</span>, otomatis cepat karena menggunakan server global, SSL gratis, dan proses deploy cukup dengan drag-drop. Sangat cocok untuk website statis dan interaktif seperti yang kami buat. Anda juga dapat menggunakan subdomain gratis (namaproject.vercel.app) tanpa biaya domain.</p></div>
+                    </div>
+                    <div class="qa-item">
+                        <div class="qa-question"><i class="fas fa-chevron-down"></i> Apakah website dari EduSites aman? Bagaimana sistem pembayarannya?</div>
+                        <div class="qa-answer"><p><strong>Sangat aman.</strong> Sistem kami: <strong>permintaan → diskusi → kami buatkan → Anda lihat hasilnya → cocok? baru bayar.</strong> Jika tidak cocok, Anda dapat memberitahukan. Tidak ada uang muka, tidak ada risiko penipuan. Pembayaran dilakukan setelah website selesai dan Anda puas 100%.</p></div>
+                    </div>
+                    <div class="qa-item">
+                        <div class="qa-question"><i class="fas fa-chevron-down"></i> Apakah website yang dibuat tahan lama? Apa jaminannya?</div>
+                        <div class="qa-answer"><p><strong>Sangat tahan lama.</strong> Karena dihosting di Vercel/Netlify yang memiliki <strong>uptime 99,9%</strong> (hampir tidak pernah down). Infrastruktur mereka setara perusahaan besar. Website Anda akan tetap online selama bertahun-tahun tanpa perlu perawatan. Plus, akses <strong>seumur hidup</strong> – sekali bayar, tidak ada biaya bulanan.</p></div>
+                    </div>
+                    <div class="qa-item">
+                        <div class="qa-question"><i class="fas fa-chevron-down"></i> Apakah website saya aman dari serangan hacker?</div>
+                        <div class="qa-answer"><p><strong>Sangat aman.</strong> Vercel dan Netlify memiliki sistem keamanan berlapis: SSL Gratis (HTTPS), proteksi DDoS otomatis, infrastruktur cloud yang aman, dan pembaruan keamanan rutin. Dengan demikian, website Anda terlindungi dari serangan hacker umum.</p></div>
+                    </div>
+                    <div class="qa-item">
+                        <div class="qa-question"><i class="fas fa-chevron-down"></i> Mengapa memilih Vercel/Netlify dibanding hosting .com/.id biasa?</div>
+                        <div class="qa-answer"><p>Karena Vercel/Netlify <strong>gratis, cepat, dan mudah</strong>. Hosting biasa memerlukan biaya bulanan atau tahunan, perlu konfigurasi server, dan kecepatan bergantung pada server. Dengan Vercel/Netlify, Anda mendapatkan gratis selamanya, CDN global, SSL otomatis, dan kemudahan proses deploy.</p></div>
+                    </div>
+                    <div class="qa-item">
+                        <div class="qa-question"><i class="fas fa-chevron-down"></i> Apakah website dapat saya edit sendiri secara real-time seperti WordPress?</div>
+                        <div class="qa-answer"><p><strong>Website yang kami buat bersifat statis (kode HTML/CSS/JS), bukan platform CMS seperti WordPress atau Webflow.</strong> Artinya, untuk mengubah tampilan atau menambahkan konten, Anda perlu mengedit file kode secara langsung. Jika Anda tidak menguasai coding, Anda dapat memesan layanan revisi kepada kami kapan pun diperlukan. Untuk perubahan besar seperti penambahan logo khusus (misalnya tema Ramadhan), cukup hubungi kami dan kami akan membantu dengan biaya revisi yang sangat terjangkau.</p>
+                        <p>✅ Keuntungan: website super cepat, aman, dan tidak perlu repot dengan pembaruan bulanan.<br>✅ Jika menginginkan perubahan kecil (teks, gambar), kami dapat membantu dengan cepat.</p></div>
+                    </div>
+                    <div class="qa-item">
+                        <div class="qa-question"><i class="fas fa-chevron-down"></i> Apakah Anda menerima pembuatan website presentasi seperti PowerPoint?</div>
+                        <div class="qa-answer"><p>Kami menerima pembuatan website presentasi yang bersifat <strong>teks interaktif (95% teks, 5% gambar)</strong>, misalnya naskah dialog bahasa, skenario, atau materi presentasi sederhana. Kami tidak menerima presentasi bergambar berat seperti slide PowerPoint yang memerlukan banyak elemen visual kompleks. Untuk kebutuhan dialog atau naskah, silakan pilih kategori "Dialog & Presentasi Teks".</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HALAMAN TENTANG -->
+    <div class="page" id="tentang">
+        <div class="marquee-container">
+            <div class="marquee-content">
+                <span class="marquee-item"><i class="fas fa-star"></i> TENTANG KAMI: FOKUS PADA KUALITAS & KEPUASAN</span>
+                <span class="marquee-item"><i class="fas fa-shield-alt"></i> 100% AMAN • BAYAR SETELAH JADI</span>
+                <span class="marquee-item"><i class="fas fa-users"></i> TIM PROFESIONAL, PENGALAMAN LUAS</span>
+                <span class="marquee-item"><i class="fas fa-chart-line"></i> ASET DIGITAL UNTUK MASA DEPAN</span>
+                <span class="marquee-item"><i class="fas fa-star"></i> TENTANG KAMI: FOKUS PADA KUALITAS & KEPUASAN</span>
+                <span class="marquee-item"><i class="fas fa-shield-alt"></i> 100% AMAN • BAYAR SETELAH JADI</span>
+            </div>
+        </div>
+        <div class="container">
+            <div class="about-section" style="margin-top:2rem;">
+                <h2>Tentang EduSites</h2>
+                <p>EduSites adalah penyedia jasa pembuatan website yang mengutamakan kualitas, kecepatan, dan harga terjangkau. Kami melayani berbagai kebutuhan: website bisnis, edukasi interaktif, dialog, turnamen, UMKM, toko online, dan masih banyak lagi. Dengan sistem bayar setelah jadi, Anda tidak perlu khawatir. Tim kami siap membantu mewujudkan website impian Anda.</p>
+                <p style="margin-top: 1rem; font-weight: 600; color: var(--biru);">Kami tidak menerima proyek portofolio pribadi, presentasi bergambar, atau website judi online. Kami hanya menerima presentasi berbasis teks (dialog, naskah).</p>
+            </div>
+            <div class="cta-strip" style="margin-top:2rem;">
+                <div class="cta-strip-text"><i class="fas fa-hand-peace"></i> Sudah yakin dengan kami?</div>
+                <a href="#" onclick="showPage('kontak'); return false;" class="cta-strip-btn">Hubungi Admin</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- HALAMAN LAYANAN -->
+    <div class="page" id="layanan">
+        <div class="marquee-container">
+            <div class="marquee-content">
+                <span class="marquee-item"><i class="fas fa-bolt"></i> LAYANAN: MULAI RP5.000 • PROSES 2-3 HARI</span>
+                <span class="marquee-item"><i class="fas fa-crown"></i> PAKET BASIC, MEDIUM, PREMIUM</span>
+                <span class="marquee-item"><i class="fas fa-globe"></i> GRATIS HOSTING SELAMANYA</span>
+                <span class="marquee-item"><i class="fas fa-undo-alt"></i> REVISI SAMPAI PUAS</span>
+                <span class="marquee-item"><i class="fas fa-bolt"></i> LAYANAN: MULAI RP5.000 • PROSES 2-3 HARI</span>
+                <span class="marquee-item"><i class="fas fa-crown"></i> PAKET BASIC, MEDIUM, PREMIUM</span>
+            </div>
+        </div>
+        <div class="container">
+            <h2 class="section-title"><span>Kategori</span> Layanan</h2>
+            <p style="text-align:center; margin-bottom:2rem; color:#6b7280;">Harga dasar sama untuk semua kategori, keuntungan dan fitur disesuaikan dengan kebutuhan Anda</p>
+            <div class="kategori-grid">
+                <div class="kategori-card"><div class="kategori-icon"><i class="fas fa-briefcase"></i></div><h3>Bisnis & UMKM</h3><div class="kategori-harga">Rp5.000 - Rp20.000</div><ul class="kategori-benefits"><li><i class="fas fa-check"></i> Profil perusahaan lengkap</li><li><i class="fas fa-check"></i> Katalog produk/jasa</li><li><i class="fas fa-check"></i> Halaman kontak & map</li><li><i class="fas fa-check"></i> Form pemesanan</li><li><i class="fas fa-check"></i> Testimoni pelanggan</li><li><i class="fas fa-check"></i> Desain profesional & responsif</li></ul></div>
+                <div class="kategori-card"><div class="kategori-icon"><i class="fas fa-graduation-cap"></i></div><h3>Belajar Interaktif</h3><div class="kategori-harga">Rp5.000 - Rp20.000</div><ul class="kategori-benefits"><li><i class="fas fa-check"></i> 1 materi pelajaran lengkap</li><li><i class="fas fa-check"></i> Rangkuman & ringkasan</li><li><i class="fas fa-check"></i> Quiz interaktif + penjelasan</li><li><i class="fas fa-check"></i> Flashcard untuk hafalan</li><li><i class="fas fa-check"></i> Checklist progress belajar</li><li><i class="fas fa-check"></i> Tips & trik cepat paham</li></ul></div>
+                <div class="kategori-card">
+                    <div class="kategori-icon"><i class="fas fa-comments"></i></div>
+                    <h3>Dialog & Presentasi Teks</h3>
+                    <div class="kategori-harga">Rp5.000 - Rp20.000</div>
+                    <p style="font-size: 0.9rem; color: var(--biru); margin-bottom: 0.5rem;">Khusus presentasi berbasis teks (95% teks, 5% gambar) – cocok untuk naskah dialog, skenario, atau materi presentasi sederhana.</p>
+                    <ul class="kategori-benefits">
+                        <li><i class="fas fa-check"></i> Naskah dialog interaktif</li>
+                        <li><i class="fas fa-check"></i> Tabel vocabulary (untuk bahasa asing)</li>
+                        <li><i class="fas fa-check"></i> Pembagian peran/karakter</li>
+                        <li><i class="fas fa-check"></i> Audio/video integration</li>
+                        <li><i class="fas fa-check"></i> Desain bersih & mudah dibaca</li>
+                        <li><i class="fas fa-check"></i> Cocok untuk tugas speaking</li>
+                    </ul>
+                </div>
+                <div class="kategori-card"><div class="kategori-icon"><i class="fas fa-shopping-cart"></i></div><h3>Toko Online</h3><div class="kategori-harga">Rp5.000 - Rp20.000</div><ul class="kategori-benefits"><li><i class="fas fa-check"></i> Katalog produk dengan gambar</li><li><i class="fas fa-check"></i> Keranjang belanja sederhana</li><li><i class="fas fa-check"></i> Form pemesanan otomatis ke WA</li><li><i class="fas fa-check"></i> Kategori produk</li><li><i class="fas fa-check"></i> Informasi promo & diskon</li><li><i class="fas fa-check"></i> Desain mobile-friendly</li></ul></div>
+                <div class="kategori-card"><div class="kategori-icon"><i class="fas fa-calendar-alt"></i></div><h3>Event</h3><div class="kategori-harga">Rp5.000 - Rp20.000</div><ul class="kategori-benefits"><li><i class="fas fa-check"></i> Landing page event</li><li><i class="fas fa-check"></i> Countdown timer</li><li><i class="fas fa-check"></i> Form pendaftaran online</li><li><i class="fas fa-check"></i> Informasi jadwal & lokasi</li><li><i class="fas fa-check"></i> Galeri foto event sebelumnya</li><li><i class="fas fa-check"></i> Link ke peta</li></ul></div>
+                <div class="kategori-card"><div class="kategori-icon"><i class="fas fa-trophy"></i></div><h3>Turnamen</h3><div class="kategori-harga">Rp5.000 - Rp20.000</div><ul class="kategori-benefits"><li><i class="fas fa-check"></i> Bracket turnamen interaktif</li><li><i class="fas fa-check"></i> Pendaftaran peserta online</li><li><i class="fas fa-check"></i> Live score update</li><li><i class="fas fa-check"></i> Profil tim/player</li><li><i class="fas fa-check"></i> Jadwal pertandingan</li><li><i class="fas fa-check"></i> Pengumuman & berita</li></ul></div>
+            </div>
+
+            <h2 class="section-title"><span>Paket</span> Jasa Pembuatan Website</h2>
+            <p style="text-align:center; margin:-2rem auto 3rem; color:#6b7280;">Bayar setelah jadi & puas. Semua include hosting premium & akses seumur hidup.</p>
+            <div class="pricing-grid">
+                <div class="pricing-card"><h3>Basic</h3><div class="pricing-sub">Bawa materi sendiri</div><div class="pricing-price">Rp5.000 <small>sekali</small></div><ul class="pricing-features"><li><i class="fas fa-check"></i> Website sesuai kategori pilihan</li><li><i class="fas fa-check"></i> Fitur dasar kategori</li><li><i class="fas fa-check"></i> Hosting gratis selamanya</li><li><i class="fas fa-check"></i> Revisi 2x setelah jadi</li><li><i class="fas fa-check"></i> Support via WhatsApp</li></ul><a href="#" onclick="showPage('kontak'); return false;" class="btn">Pilih Paket</a></div>
+                <div class="pricing-card"><span class="popular-badge">✨ PALING DIMINATI ✨</span><h3>Medium</h3><div class="pricing-sub">Bawa materi, kami revisi interaktif</div><div class="pricing-price">Rp10.000 <small>sekali</small></div><ul class="pricing-features"><li><i class="fas fa-check"></i> Semua fitur Basic</li><li><i class="fas fa-check"></i> Materi direvisi + animasi</li><li><i class="fas fa-check"></i> Fitur tambahan sesuai kategori</li><li><i class="fas fa-check"></i> Progress tracking</li><li><i class="fas fa-check"></i> Revisi 3x</li></ul><a href="#" onclick="showPage('kontak'); return false;" class="btn btn-curious">Pilih Paket</a></div>
+                <div class="pricing-card"><h3>Premium</h3><div class="pricing-sub">Kami carikan materi & konsep</div><div class="pricing-price">Rp20.000 <small>sekali</small></div><ul class="pricing-features"><li><i class="fas fa-check"></i> Semua fitur Medium</li><li><i class="fas fa-check"></i> Materi dicarikan lengkap</li><li><i class="fas fa-check"></i> Fitur premium kategori</li><li><i class="fas fa-check"></i> Request fitur khusus</li><li><i class="fas fa-check"></i> Revisi unlimited 1 bulan</li></ul><a href="#" onclick="showPage('kontak'); return false;" class="btn">Pilih Paket</a></div>
+            </div>
+
+            <!-- SECTION PAKET SOURCE CODE -->
+            <div class="source-code-section">
+                <h3>Ingin Membeli Kode HTML Mentah?</h3>
+                <p style="font-size:1.2rem; max-width:700px; margin:0 auto;">Dapatkan source code website siap pakai, lengkap dengan panduan deploy. Cocok untuk yang ingin belajar atau mengembangkan sendiri.</p>
+                <div class="source-code-grid">
+                    <div class="source-code-card">
+                        <h4>Paket Source Code</h4>
+                        <div class="source-code-price">Rp15.000 <small>sekali</small></div>
+                        <ul>
+                            <li><i class="fas fa-check"></i> 1 file HTML + CSS + JS siap pakai</li>
+                            <li><i class="fas fa-check"></i> Dapat request jenis website (1 halaman)</li>
+                            <li><i class="fas fa-check"></i> Dikirim via WhatsApp/Email dalam 1-3 hari</li>
+                            <li><i class="fas fa-check"></i> Panduan deploy ke Vercel/Netlify</li>
+                            <li><i class="fas fa-check"></i> Bimbingan via chat jika ada kendala</li>
+                            <li><i class="fas fa-check"></i> Kode sudah diuji dan bebas bug</li>
+                        </ul>
+                        <p style="margin-top:1rem; background:rgba(255,255,255,0.2); padding:0.8rem; border-radius:10px;">
+                            <strong>Mengapa Rp15.000?</strong> Karena ini bukan template sembarangan. Kami berikan kode yang sudah diuji, lengkap dengan panduan, dan dukungan jika mengalami kesulitan. Anda mendapatkan ilmu dan pengalaman membuat website sendiri.
+                        </p>
+                        <a href="#" onclick="showPage('kontak'); return false;" class="btn" style="background:white; color:var(--biru); width:100%; margin-top:1rem;">Pesan Sekarang</a>
+                    </div>
+                </div>
+                <p style="text-align:center; margin-top:2rem; color:rgba(255,255,255,0.9);">Tidak bisa melakukan deploy? Tenang, kami bimbing langkah demi langkah. Tidak perlu khawatir.</p>
+            </div>
+
+            <div class="cta-strip"><div class="cta-strip-text"><i class="fas fa-gem"></i> Sudah menemukan paket yang sesuai?</div><a href="#" onclick="showPage('kontak'); return false;" class="cta-strip-btn">Konsultasi Sekarang</a></div>
+            <div class="payment-methods"><div class="payment-method"><i class="fas fa-qrcode"></i> QRIS (Semua E-Wallet)</div><div class="payment-method"><i class="fas fa-university"></i> Transfer Bank</div><div class="payment-method"><i class="fas fa-mobile-alt"></i> E-Wallet</div></div>
+        </div>
+    </div>
+
+    <!-- HALAMAN KARYA (PORTOFOLIO) – VERSI KEKINIAN -->
+    <div class="page" id="klien">
+        <div class="marquee-container">
+            <div class="marquee-content">
+                <span class="marquee-item"><i class="fas fa-rocket"></i> KARYA KAMI: LIHAT SENDIRI HASILNYA</span>
+                <span class="marquee-item"><i class="fas fa-check-circle"></i> 100% WEBSITE BERJALAN & BISA DIAKSES</span>
+                <span class="marquee-item"><i class="fas fa-award"></i> DARI PEMBELAJARAN SAMPAI TURNAMEN</span>
+                <span class="marquee-item"><i class="fas fa-eye"></i> BUKTIKAN SENDIRI KUALITASNYA</span>
+                <span class="marquee-item"><i class="fas fa-rocket"></i> KARYA KAMI: LIHAT SENDIRI HASILNYA</span>
+                <span class="marquee-item"><i class="fas fa-check-circle"></i> 100% WEBSITE BERJALAN & BISA DIAKSES</span>
+            </div>
+        </div>
+        <div class="container">
+            <h2 class="section-title"><span>Portofolio</span> Karya</h2>
+            <div class="book-walk"><i class="fas fa-book-open"></i></div>
+            <div class="handshake-animation"><i class="fas fa-hand-peace left-hand"></i><i class="fas fa-hand-peace right-hand"></i></div>
+            <p style="text-align:center; margin:1rem auto 2rem; color:#6b7280;">Beberapa website yang telah kami buat. Klik untuk melihat langsung!</p>
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <div class="portfolio-media"><i class="fas fa-flask"></i></div>
+                    <div class="portfolio-content">
+                        <h3>IPA – Gelombang & Getaran</h3>
+                        <p class="portfolio-desc">Website pembelajaran IPA interaktif dengan animasi gelombang.</p>
+                        <a href="https://fzzn8273.github.io/IPA-GELOMBANG-DAN-GETARAN/" target="_blank" class="portfolio-link">Lihat Langsung <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-media"><i class="fas fa-calculator"></i></div>
+                    <div class="portfolio-content">
+                        <h3>Matematika Kelas 8</h3>
+                        <p class="portfolio-desc">Materi lengkap semester 2 dengan grafik dinamis.</p>
+                        <a href="https://fzzn8273.github.io/semester-2-SMP-MTK-/semester%202-full%20kelas%208.html" target="_blank" class="portfolio-link">Lihat Langsung <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-media"><i class="fas fa-comments"></i></div>
+                    <div class="portfolio-content">
+                        <h3>Vocab Chat – Dialog Inggris</h3>
+                        <p class="portfolio-desc">Naskah dialog interaktif dengan tabel vocabulary.</p>
+                        <a href="https://fzzn8273.github.io/Kerkompnaskahbinggris/" target="_blank" class="portfolio-link">Lihat Langsung <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-media"><i class="fas fa-gamepad"></i></div>
+                    <div class="portfolio-content">
+                        <h3>PGB Esports Official</h3>
+                        <p class="portfolio-desc">Website resmi komunitas e-sport.</p>
+                        <a href="https://official-pgb.vercel.app" target="_blank" class="portfolio-link">Lihat Langsung <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-media"><i class="fas fa-trophy"></i></div>
+                    <div class="portfolio-content">
+                        <h3>Indonesia Champions League</h3>
+                        <p class="portfolio-desc">Platform turnamen dengan sistem bracket.</p>
+                        <a href="https://indonesiachampionsleague.vercel.app" target="_blank" class="portfolio-link">Lihat Langsung <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="cta-strip"><div class="cta-strip-text"><i class="fas fa-star"></i> Terinspirasi dengan karya kami?</div><a href="#" onclick="showPage('kontak'); return false;" class="cta-strip-btn">Buat Sekarang</a></div>
+        </div>
+    </div>
+
+    <!-- HALAMAN BLOG -->
+    <div class="page" id="blog">
+        <div class="marquee-container">
+            <div class="marquee-content">
+                <span class="marquee-item"><i class="fas fa-blog"></i> BLOG: TIPS & TRIK DIGITAL</span>
+                <span class="marquee-item"><i class="fas fa-code"></i> CARA MEMBUAT WEBSITE SENDIRI</span>
+                <span class="marquee-item"><i class="fas fa-brain"></i> STRATEGI BELAJAR EFEKTIF</span>
+                <span class="marquee-item"><i class="fas fa-newspaper"></i> UPDATE TEKNOLOGI TERKINI</span>
+                <span class="marquee-item"><i class="fas fa-blog"></i> BLOG: TIPS & TRIK DIGITAL</span>
+                <span class="marquee-item"><i class="fas fa-code"></i> CARA MEMBUAT WEBSITE SENDIRI</span>
+            </div>
+        </div>
+        <div class="container">
+            <h2 class="section-title"><span>Blog</span> EduSites</h2>
+            <p style="text-align:center; color:#6b7280;">Segera hadir artikel-artikel menarik seputar pembuatan website, tips belajar, dan teknologi.</p>
+            <div class="cta-strip"><div class="cta-strip-text"><i class="fas fa-lightbulb"></i> Butuh konsultasi sekarang?</div><a href="#" onclick="showPage('kontak'); return false;" class="cta-strip-btn">Tanya Admin</a></div>
+        </div>
+    </div>
+
+    <!-- HALAMAN PROMO -->
+    <div class="page" id="gratis">
+        <div class="marquee-container">
+            <div class="marquee-content">
+                <span class="marquee-item"><i class="fas fa-gift"></i> PROMO: AJAK TEMAN, DISKON 1.500!</span>
+                <span class="marquee-item"><i class="fab fa-youtube"></i> SUBSCRIBE YOUTUBE & SHARE GRUP</span>
+                <span class="marquee-item"><i class="fas fa-coins"></i> POTONGAN HINGGA RP5.000</span>
+                <span class="marquee-item"><i class="fas fa-clock"></i> JANGAN LEWATKAN KESEMPATAN</span>
+                <span class="marquee-item"><i class="fas fa-gift"></i> PROMO: AJAK TEMAN, DISKON 1.500!</span>
+                <span class="marquee-item"><i class="fab fa-youtube"></i> SUBSCRIBE YOUTUBE & SHARE GRUP</span>
+            </div>
+        </div>
+        <div class="container">
+            <h2 class="section-title"><span>Promo</span> Spesial</h2>
+            <div class="peeking-face"><i class="fas fa-smile"></i></div>
+            <div class="promo-teman-section">
+                <h2>Ajak Teman, Diskon Berlimpah</h2>
+                <div class="promo-highlight">
+                    POTONGAN RP1.500 UNTUK SETIAP PAKET!
+                </div>
+                <div class="promo-detail">
+                    Ajak teman untuk membeli di EduSites, kalian berdua mendapatkan potongan Rp1.500 untuk paket yang dipilih.<br>
+                    <span class="text-yellow">Contoh:</span> Paket 5.000 menjadi 3.500 • Paket 10.000 menjadi 8.500 • Paket 20.000 menjadi 18.500
+                </div>
+                <div class="promo-points">
+                    <div class="promo-point">
+                        <i class="fab fa-youtube"></i>
+                        <h3>Subscribe YouTube</h3>
+                        <p>Subscribe @fauzanstudent, screenshot, kirim ke admin untuk mendapatkan kode promo.</p>
+                    </div>
+                    <div class="promo-point">
+                        <i class="fas fa-share-alt"></i>
+                        <h3>Share ke Grup</h3>
+                        <p>Share teks promosi ke 3 grup WhatsApp/Telegram, screenshot.</p>
+                    </div>
+                    <div class="promo-point">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>Konfirmasi</h3>
+                        <p>Kirim kedua screenshot ke admin via WhatsApp. Diskon langsung diberikan!</p>
+                    </div>
+                </div>
+                <div class="share-text-box">
+                    <p style="margin-bottom:1rem; font-weight:700;">📢 Copy teks promosi di bawah dan share ke grup:</p>
+                    <div class="share-text-content" id="shareText">
+🎁 Halo teman-teman! Saya baru menemukan jasa pembuatan website termurah se-Indonesia. Hanya Rp5.000 sudah dapat memiliki website profesional untuk belajar, bisnis, toko online, atau bahkan turnamen. Prosesnya cepat hanya 2-3 hari, akses seumur hidup, hosting gratis. Kalian harus mencoba! 
+
+Klik di sini: https://edusites.vercel.app
+Chat admin: 0878-1734-3826
+
+Ajak teman kalian beli bersama, diskon 1.500 per orang! Yuk segera sebelum promo berakhir.
+                    </div>
+                    <button class="btn btn-copy" onclick="copyShareText()"><i class="fas fa-copy"></i> Copy Teks</button>
+                </div>
+                <div class="gratis-cta"><a href="https://wa.me/6287817343826" target="_blank" class="btn" style="background:white; color:var(--biru); font-size:1.3rem; padding:1rem 3rem;"><i class="fab fa-whatsapp"></i> Chat Admin Sekarang</a><p style="margin-top:1.5rem; color:rgba(255,255,255,0.9);">Promo terbatas untuk pembeli pertama. Segera manfaatkan!</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HALAMAN KONTAK -->
+    <div class="page" id="kontak">
+        <div class="marquee-container">
+            <div class="marquee-content">
+                <span class="marquee-item"><i class="fas fa-headset"></i> KONTAK: CHAT ADMIN VIA WHATSAPP</span>
+                <span class="marquee-item"><i class="fas fa-bolt"></i> RESPON CEPAT MAKSIMAL 1 JAM</span>
+                <span class="marquee-item"><i class="fab fa-instagram"></i> FOLLOW @EDU.SITES</span>
+                <span class="marquee-item"><i class="fab fa-youtube"></i> SUBSCRIBE @FAUZANSTUDENT</span>
+                <span class="marquee-item"><i class="fas fa-headset"></i> KONTAK: CHAT ADMIN VIA WHATSAPP</span>
+                <span class="marquee-item"><i class="fas fa-bolt"></i> RESPON CEPAT MAKSIMAL 1 JAM</span>
+            </div>
+        </div>
+        <div class="container">
+            <h2 class="section-title"><span>Hubungi</span> Kami</h2>
+            <div class="contact-grid">
+                <div class="contact-card"><div class="contact-icon"><i class="fab fa-whatsapp"></i></div><h3>WhatsApp</h3><p>0878-1734-3826</p><a href="https://wa.me/6287817343826" target="_blank" class="btn">Chat</a></div>
+                <div class="contact-card"><div class="contact-icon"><i class="fab fa-instagram"></i></div><h3>Instagram</h3><p>@edu.sites</p><a href="https://instagram.com/edu.sites" target="_blank" class="btn btn-curious">Follow</a></div>
+                <div class="contact-card"><div class="contact-icon"><i class="fab fa-youtube"></i></div><h3>YouTube</h3><p>@fauzanstudent</p><a href="https://youtube.com/@fauzanstudent" target="_blank" class="btn">Subscribe</a></div>
+            </div>
+            <div class="cta-strip"><div class="cta-strip-text"><i class="fas fa-headset"></i> Langsung chat saja!</div><a href="https://wa.me/6287817343826" target="_blank" class="cta-strip-btn">WhatsApp Sekarang</a></div>
+            <div style="text-align:center; margin:2rem 0;"><h3 style="color:var(--biru); margin-bottom:1rem;">Metode Pembayaran</h3><div class="payment-methods"><div class="payment-method"><i class="fas fa-qrcode"></i> QRIS (Semua E-Wallet)</div><div class="payment-method"><i class="fas fa-university"></i> Transfer Bank</div></div></div>
+            <div class="form-container"><h3 style="text-align:center; margin-bottom:2rem;">Atau isi formulir di bawah</h3><form id="quickContact"><div class="form-group"><input type="text" id="name" placeholder="Nama lengkap" required></div><div class="form-group"><select id="package" required><option value="">Pilih paket</option><option>Paket Basic Rp5.000 (bawa materi)</option><option>Paket Medium Rp10.000 (revisi interaktif)</option><option>Paket Premium Rp20.000 (kami carikan materi)</option><option>Paket Source Code Rp15.000 (kode HTML)</option></select></div><div class="form-group"><textarea id="notes" rows="4" placeholder="Ceritakan kebutuhan Anda... (contoh: website pembelajaran, toko online, dll)"></textarea></div><button type="button" class="btn" style="width:100%;" onclick="submitForm()"><i class="fab fa-whatsapp"></i> Kirim via WhatsApp</button></form></div>
+        </div>
+    </div>
+
+    <!-- HALAMAN RESELLER -->
+    <div class="page" id="reseller">
+        <div class="marquee-container">
+            <div class="marquee-content">
+                <span class="marquee-item"><i class="fas fa-handshake"></i> RESELLER: JADI MITRA EDU SITES</span>
+                <span class="marquee-item"><i class="fas fa-coins"></i> UNLIMITED POTENSI PENGHASILAN</span>
+                <span class="marquee-item"><i class="fas fa-gift"></i> FREE WEBSITE JIKA TEMBUS 5 BUYER</span>
+                <span class="marquee-item"><i class="fas fa-share-alt"></i> TINGGAL SHARE, KAMI YANG KERJA</span>
+                <span class="marquee-item"><i class="fas fa-handshake"></i> RESELLER: JADI MITRA EDU SITES</span>
+                <span class="marquee-item"><i class="fas fa-coins"></i> UNLIMITED POTENSI PENGHASILAN</span>
+            </div>
+        </div>
+        <div class="container">
+            <div class="reseller-section">
+                <h2 class="section-title"><span>Jadi Reseller</span> EduSites</h2>
+                <p style="text-align:center; max-width:700px; margin:0 auto 2rem; color:#6b7280;">Ingin memiliki penghasilan tambahan tanpa ribet? Bergabunglah sebagai mitra reseller/dropship EduSites. Anda cukup mencari pelanggan, kami yang akan mengurus pembuatan websitenya.</p>
+
+                <div class="reseller-benefits">
+                    <div class="reseller-benefit-card">
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <h3>Bebas Menentukan Harga</h3>
+                        <p>Anda dapat menjual dengan harga berapa pun. Keuntungan sepenuhnya milik Anda. Kami hanya mematok harga dasar Rp5.000 untuk paket jasa dan Rp15.000 untuk paket source code.</p>
+                    </div>
+                    <div class="reseller-benefit-card">
+                        <i class="fas fa-laptop-code"></i>
+                        <h3>Website Tetap Kami Buatkan</h3>
+                        <p>Anda mencari pelanggan, kami yang membuat websitenya. Tidak perlu repot dengan urusan teknis atau desain.</p>
+                    </div>
+                    <div class="reseller-benefit-card">
+                        <i class="fas fa-gift"></i>
+                        <h3>Bonus Spesial</h3>
+                        <p>Jika dalam satu bulan berhasil menjual kepada 5 buyer, kami akan membuatkan website GRATIS untuk Anda! Dapat digunakan untuk promosi atau kebutuhan pribadi.</p>
+                    </div>
+                    <div class="reseller-benefit-card">
+                        <i class="fas fa-headset"></i>
+                        <h3>Dukungan Penuh</h3>
+                        <p>Kami siap membantu proses dari awal hingga website selesai. Anda tinggal menikmati komisi.</p>
+                    </div>
+                </div>
+
+                <div class="reseller-note">
+                    <h3 style="margin-bottom:1rem;">Catatan Penting</h3>
+                    <p>Pendaftaran reseller <strong>GRATIS</strong> tanpa biaya. Anda hanya perlu menaikkan harga dengan wajar, misalnya menjual paket Rp5.000 dengan harga Rp10.000. Keuntungan Rp5.000 sepenuhnya milik Anda. Hindari menaikkan harga secara tidak wajar yang dapat merusak pasar.</p>
+                </div>
+
+                <div class="reseller-form">
+                    <h3 style="text-align:center; margin-bottom:2rem; color:var(--biru);">Formulir Pendaftaran Reseller</h3>
+                    <form id="resellerForm">
+                        <div class="form-group">
+                            <label style="font-weight:600;">Nama Lengkap</label>
+                            <input type="text" id="resellerName" placeholder="Masukkan nama Anda" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-weight:600;">Nomor WhatsApp Aktif</label>
+                            <input type="text" id="resellerWA" placeholder="Contoh: 08123456789" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-weight:600;">Email (opsional)</label>
+                            <input type="email" id="resellerEmail" placeholder="email@anda.com">
+                        </div>
+                        <div class="form-group">
+                            <label style="font-weight:600;">Alasan ingin menjadi reseller (opsional)</label>
+                            <textarea id="resellerReason" rows="3" placeholder="Ceritakan sedikit..."></textarea>
+                        </div>
+                        <button type="button" class="btn" style="width:100%;" onclick="submitReseller()"><i class="fab fa-whatsapp"></i> Daftar via WhatsApp</button>
+                    </form>
+                </div>
+
+                <div style="text-align:center; margin-top:2rem;">
+                    <p style="color:#6b7280;">Atau langsung hubungi admin untuk informasi lebih lanjut: <strong>0878-1734-3826</strong></p>
+                    <a href="https://wa.me/6287817343826" target="_blank" class="btn btn-outline" style="margin-top:1rem;"><i class="fab fa-whatsapp"></i> Chat Admin</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-logo">
+                        <img src="Edu.jpg" alt="EduSites">
+                        <span class="edu">Edu</span><span class="s1">s</span><span class="s2">i</span><span class="s3">t</span><span class="s4">e</span><span class="s5">s</span>
+                    </div>
+                    <p style="color:#adb5bd; max-width:300px;">Jasa pembuatan website termurah untuk pembelajaran, dialog, presentasi teks, turnamen, UMKM, dan segala kebutuhan digital. Tidak menerima proyek portofolio pribadi, presentasi bergambar, atau judi online.</p>
+                    <div class="footer-wa">
+                        <a href="https://wa.me/6287817343826" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                        <span style="color:#adb5bd;">0878-1734-3826</span>
+                    </div>
+                    <div class="footer-social">
+                        <a href="https://instagram.com/edu.sites" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://youtube.com/@fauzanstudent" target="_blank"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <div><h4>Navigasi</h4><ul><li><a href="#" onclick="showPage('home'); return false;">BERANDA</a></li><li><a href="#" onclick="showPage('tentang'); return false;">TENTANG</a></li><li><a href="#" onclick="showPage('layanan'); return false;">LAYANAN</a></li><li><a href="#" onclick="showPage('klien'); return false;">KARYA</a></li><li><a href="#" onclick="showPage('blog'); return false;">BLOG</a></li><li><a href="#" onclick="showPage('kontak'); return false;">KONTAK</a></li><li><a href="#" onclick="showPage('gratis'); return false;">PROMO</a></li><li><a href="#" onclick="showPage('reseller'); return false;">RESELLER</a></li></ul></div>
+                    <div><h4>Kontak</h4><ul><li><a href="https://wa.me/6287817343826">WhatsApp</a></li><li><a href="https://instagram.com/edu.sites">Instagram</a></li><li><a href="https://youtube.com/@fauzanstudent">YouTube</a></li></ul></div>
+                </div>
+            </div>
+            <div class="payment-info"><div class="payment-info-text"><h4><i class="fas fa-credit-card" style="color:var(--oranye);"></i> Metode Pembayaran yang Kami Terima</h4><p>Kami menyediakan berbagai opsi pembayaran untuk memudahkan transaksi Anda. Pembayaran dilakukan setelah website selesai dan Anda setuju dengan hasilnya.</p><div class="security-badge"><i class="fas fa-shield-alt"></i><span>100% aman & transparan – Tidak ada biaya tambahan</span></div></div><div class="payment-info-icons"><i class="fas fa-qrcode" title="QRIS (Semua E-Wallet)"></i><i class="fas fa-university" title="Transfer Bank (BCA, Mandiri, BRI, BNI)"></i><i class="fas fa-mobile-alt" title="E-Wallet (OVO, Gopay, Dana, ShopeePay)"></i><i class="fas fa-credit-card" title="Kartu Kredit/Debit"></i></div></div>
+            <div class="copyright"><p>© 2025 EduSites. All rights reserved.</p><p>EduSites – Solusi Digital Terpercaya</p></div>
+        </div>
+    </footer>
+
+    <script>
+        // LOADING SCREEN HILANG
+        window.addEventListener('load', function(){
+            setTimeout(function(){
+                document.getElementById('loading-screen').style.opacity = '0';
+                setTimeout(function(){
+                    document.getElementById('loading-screen').style.display = 'none';
+                },500);
+            },1500);
+        });
+
+        // PAGE LOADING
+        const pageLoading = document.getElementById('page-loading');
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+
+        hamburger.addEventListener('click', function(){
+            navMenu.classList.toggle('active');
+        });
+
+        function showPage(pageId){
+            pageLoading.style.display = 'flex';
+            setTimeout(function(){
+                document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+                document.getElementById(pageId).classList.add('active');
+                document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+                const activeNav = document.getElementById('nav-'+pageId);
+                if(activeNav) activeNav.classList.add('active');
+                navMenu.classList.remove('active');
+                pageLoading.style.display = 'none';
+            },300);
+        }
+
+        // FORM KONTAK
+        function submitForm(){
+            const name = document.getElementById('name').value;
+            const pkg = document.getElementById('package').value;
+            const notes = document.getElementById('notes').value;
+            if(!name){ alert('Nama harus diisi!'); return; }
+            const waLink = `https://wa.me/6287817343826?text=Halo EduSites! Saya ${name}. Saya tertarik dengan paket: ${pkg}. Kebutuhan saya: ${notes || 'belum diisi'}. Mohon info lebih lanjut.`;
+            window.open(waLink,'_blank');
+        }
+
+        // COPY TEKS PROMO
+        function copyShareText(){
+            const text = document.getElementById('shareText').innerText;
+            navigator.clipboard.writeText(text).then(()=>alert('Teks berhasil disalin! Share sekarang dan dapatkan diskon.')).catch(()=>alert('Gagal menyalin, silakan copy manual.'));
+        }
+
+        // FORM RESELLER
+        function submitReseller(){
+            const name = document.getElementById('resellerName').value;
+            const wa = document.getElementById('resellerWA').value;
+            const email = document.getElementById('resellerEmail').value;
+            const reason = document.getElementById('resellerReason').value;
+            if(!name || !wa){ alert('Nama dan nomor WhatsApp harus diisi!'); return; }
+            const message = `Halo EduSites! Saya ingin mendaftar sebagai reseller.\n\nNama: ${name}\nWhatsApp: ${wa}\nEmail: ${email || 'tidak diisi'}\nAlasan: ${reason || 'tidak diisi'}`;
+            const waLink = `https://wa.me/6287817343826?text=${encodeURIComponent(message)}`;
+            window.open(waLink,'_blank');
+        }
+
+        // MODAL PENASARAN
+        const modal = document.getElementById('curiousModal');
+        const slides = document.querySelectorAll('.modal-slide');
+        const prevBtn = document.getElementById('prevSlide');
+        const nextBtn = document.getElementById('nextSlide');
+        let currentSlide = 0;
+
+        function openCuriousModal(){
+            modal.classList.add('active');
+            currentSlide = 0;
+            updateSlides();
+        }
+
+        function closeCuriousModal(){
+            modal.classList.remove('active');
+        }
+
+        function updateSlides(){
+            slides.forEach((s,i)=>s.classList.toggle('active',i===currentSlide));
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+        }
+
+        prevBtn.addEventListener('click',()=>{
+            if(currentSlide > 0){
+                currentSlide--;
+                updateSlides();
+            }
+        });
+
+        nextBtn.addEventListener('click',()=>{
+            if(currentSlide < slides.length - 1){
+                currentSlide++;
+                updateSlides();
+            }
+        });
+
+        modal.addEventListener('click',(e)=>{
+            if(e.target === modal) closeCuriousModal();
+        });
+
+        // CUSTOM SCROLLBAR (HANYA THUMB)
+        const scrollThumb = document.getElementById('scrollThumb');
+        const body = document.body;
+        const html = document.documentElement;
+
+        let isDragging = false;
+        let startY, startTop;
+
+        function updateThumbHeight(){
+            const windowHeight = window.innerHeight;
+            const documentHeight = Math.max(body.scrollHeight, html.scrollHeight);
+            const thumbHeight = (windowHeight / documentHeight) * windowHeight;
+            scrollThumb.style.height = Math.max(30, thumbHeight) + 'px';
+        }
+
+        function updateThumbPosition(){
+            const scrollTop = window.pageYOffset || html.scrollTop || body.scrollTop;
+            const documentHeight = Math.max(body.scrollHeight, html.scrollHeight);
+            const windowHeight = window.innerHeight;
+            const maxScroll = documentHeight - windowHeight;
+            const scrollPercent = maxScroll > 0 ? scrollTop / maxScroll : 0;
+            const thumbMaxTop = windowHeight - scrollThumb.offsetHeight;
+            const thumbTop = scrollPercent * thumbMaxTop;
+            scrollThumb.style.top = thumbTop + 'px';
+        }
+
+        scrollThumb.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startY = e.clientY;
+            startTop = scrollThumb.offsetTop;
+            scrollThumb.style.cursor = 'grabbing';
+            e.preventDefault();
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const deltaY = e.clientY - startY;
+            const newTop = startTop + deltaY;
+            const maxTop = window.innerHeight - scrollThumb.offsetHeight;
+            const clampedTop = Math.max(0, Math.min(newTop, maxTop));
+            scrollThumb.style.top = clampedTop + 'px';
+
+            const documentHeight = Math.max(body.scrollHeight, html.scrollHeight);
+            const windowHeight = window.innerHeight;
+            const scrollPercent = clampedTop / maxTop;
+            const scrollTo = scrollPercent * (documentHeight - windowHeight);
+            window.scrollTo(0, scrollTo);
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                scrollThumb.style.cursor = 'grab';
+            }
+        });
+
+        window.addEventListener('scroll', updateThumbPosition);
+        window.addEventListener('resize', () => {
+            updateThumbHeight();
+            updateThumbPosition();
+        });
+
+        // REVEAL ON SCROLL
+        const revealElements = document.querySelectorAll('.keunggulan-card, .kategori-card, .pricing-card, .portfolio-item, .contact-card, .reseller-benefit-card, .cta-strip, .about-section, .qa-section, .source-code-section, .promo-teman-section, .hero, .section-title');
+        revealElements.forEach(el => el.classList.add('reveal'));
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        revealElements.forEach(el => observer.observe(el));
+
+        document.addEventListener('DOMContentLoaded', function(){
+            document.getElementById('nav-home').classList.add('active');
+            document.querySelectorAll('.qa-question').forEach(q=>{
+                q.addEventListener('click',function(){
+                    this.parentElement.classList.toggle('active');
+                });
+            });
+            updateThumbHeight();
+            updateThumbPosition();
+        });
+
+        setTimeout(() => {
+            updateThumbHeight();
+            updateThumbPosition();
+        }, 2000);
+    </script>
+</body>
+</html>
